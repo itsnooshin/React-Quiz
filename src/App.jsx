@@ -4,6 +4,7 @@ import { useEffect, useReducer } from 'react';
 import Loader from './Loader.jsx';
 import Error from './Error.jsx';
 import StartScreen from './StartScreen.jsx';
+import Questions from './Questions.jsx';
 
 const initalState = {
   questions: [],
@@ -11,15 +12,18 @@ const initalState = {
   status: 'loading', // 'loading' , 'error'
   //, ready ==> زمانیه که دیتا رسید we start the quiz 'active' state quiz actually is running
   // finished  when all the question is ended
+
+  index: 0,
 };
 
 const reducer = (state, action) => {
-  console.log(state);
   switch (action.type) {
     case 'dataReceived':
       return { ...state, questions: action.payLoad, status: 'ready' };
     case 'dataFailed':
       return { ...state, status: 'error' };
+    case 'start':
+      return { ...state, status: 'active' };
     default:
       throw new Error('Unknown action type');
   }
@@ -27,9 +31,10 @@ const reducer = (state, action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  console.log(state);
-  const { questions, status } = state;
-  console.log(questions, status);
+  const { questions, status, index } = state;
+
+  const numQuestions = questions.length;
+
   useEffect(() => {
     fetch('http://localhost:3000/questions')
       .then((res) => res.json())
@@ -44,7 +49,10 @@ function App() {
       <main className="main">
         {status === 'loading' && <Loader />}
         {status === 'error' && <Error />}
-        {status === 'ready' && <StartScreen />}
+        {status === 'ready' && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === 'active' && <Questions  numQuestions = {numQuestions} questions={questions[index]}  index = {index} />}
       </main>
     </div>
   );
