@@ -42,7 +42,7 @@ const reducer = (state, action) => {
       return { ...state, index: state.index + 1, answer: null };
 
     case 'finished':
-      return { ...state };
+      return { ...state, status: 'finished' };
 
     default:
       throw new Error('Unknown action type');
@@ -54,10 +54,11 @@ function App() {
   const { questions, status, index, answer, points } = state;
 
   const numQuestions = questions.length;
+  //
   const calculate = questions.reduce((acc, cur) => acc + cur.points, 0);
 
   useEffect(() => {
-    fetch('http://localhost:3000/questions')
+    fetch('http://localhost:9000/questions')
       .then((res) => res.json())
       .then((data) => dispatch({ type: 'dataReceived', payLoad: data }))
       .catch((err) => dispatch({ type: 'dataFailed' }));
@@ -92,11 +93,19 @@ function App() {
               points={points}
             />
 
-            <NextQuestion dispatch={dispatch} answer={answer} />
+            <NextQuestion
+              dispatch={dispatch}
+              question={questions}
+              index={index}
+              numQuestions={numQuestions}
+              answer={answer}
+            />
           </>
         )}
 
-        {status === 'finished' && <FinishScreen />}
+        {status === 'finished' && (
+          <FinishScreen points={points} calculate={calculate} />
+        )}
       </main>
     </div>
   );
