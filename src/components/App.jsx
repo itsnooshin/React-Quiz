@@ -18,6 +18,7 @@ const initalState = {
   index: 0,
   answer: null,
   points: 0,
+  highScore: 0,
 };
 
 const reducer = (state, action) => {
@@ -42,7 +43,22 @@ const reducer = (state, action) => {
       return { ...state, index: state.index + 1, answer: null };
 
     case 'finished':
-      return { ...state, status: 'finished' };
+      return {
+        ...state,
+        status: 'finished',
+        highScore:
+          state.points > state.highScore ? state.points : state.highScore,
+      };
+
+    case 'reset':
+      return {
+        ...state,
+        status: 'ready',
+        index: 0,
+        answer: null,
+        points: 0,
+        highScore: 0,
+      };
 
     default:
       throw new Error('Unknown action type');
@@ -51,7 +67,7 @@ const reducer = (state, action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { questions, status, index, answer, points } = state;
+  const { questions, status, index, answer, points, highScore } = state;
 
   const numQuestions = questions.length;
   //
@@ -104,7 +120,12 @@ function App() {
         )}
 
         {status === 'finished' && (
-          <FinishScreen points={points} calculate={calculate} />
+          <FinishScreen
+            points={points}
+            calculate={calculate}
+            highScore={highScore}
+            dispatch={dispatch}
+          />
         )}
       </main>
     </div>

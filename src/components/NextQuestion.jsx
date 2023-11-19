@@ -9,7 +9,7 @@ function NextQuestion({ dispatch, numQuestions, index }) {
   return (
     <div>
       <button onClick={handleFinish} className="btn btn-ui">
-        {isLastQuestion ? 'Next' : 'Next'}
+        {isLastQuestion ? 'Finish' : 'Next'}
       </button>
     </div>
   );
