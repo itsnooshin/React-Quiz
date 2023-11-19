@@ -5,6 +5,9 @@ import Loader from './Loader.jsx';
 import Error from './Error.jsx';
 import StartScreen from './StartScreen.jsx';
 import Questions from './Questions.jsx';
+import NextQuestion from './NextQuestion.jsx';
+import Progress from './Progress.jsx';
+import FinishScreen from './FinishScreen.jsx';
 
 const initalState = {
   questions: [],
@@ -12,8 +15,9 @@ const initalState = {
   status: 'loading', // 'loading' , 'error'
   //, ready ==> زمانیه که دیتا رسید we start the quiz 'active' state quiz actually is running
   // finished  when all the question is ended
-
   index: 0,
+  answer: null,
+  points: 0,
 };
 
 const reducer = (state, action) => {
@@ -24,6 +28,22 @@ const reducer = (state, action) => {
       return { ...state, status: 'error' };
     case 'start':
       return { ...state, status: 'active' };
+    case 'newAnswer':
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payLoad,
+        points:
+          action.payLoad === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
+    case 'nextQuestion':
+      return { ...state, index: state.index + 1, answer: null };
+
+    case 'finished':
+      return { ...state };
+
     default:
       throw new Error('Unknown action type');
   }
@@ -31,9 +51,10 @@ const reducer = (state, action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { questions, status, index } = state;
+  const { questions, status, index, answer, points } = state;
 
   const numQuestions = questions.length;
+  const calculate = questions.reduce((acc, cur) => acc + cur.points, 0);
 
   useEffect(() => {
     fetch('http://localhost:3000/questions')
@@ -52,7 +73,30 @@ function App() {
         {status === 'ready' && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-        {status === 'active' && <Questions  numQuestions = {numQuestions} questions={questions[index]}  index = {index} />}
+        {status === 'active' && (
+          <>
+            <Progress
+              index={index}
+              points={points}
+              calculate={calculate}
+              numQuestions={numQuestions}
+              answer={answer}
+            />
+            <Questions
+              numQuestions={numQuestions}
+              questions={questions[index]}
+              index={index}
+              calculate={calculate}
+              answer={answer}
+              dispatch={dispatch}
+              points={points}
+            />
+
+            <NextQuestion dispatch={dispatch} answer={answer} />
+          </>
+        )}
+
+        {status === 'finished' && <FinishScreen />}
       </main>
     </div>
   );
