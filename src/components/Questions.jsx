@@ -1,11 +1,7 @@
 import Options from './Options';
 
 function Questions({ questions, answer, dispatch, points }) {
-  const answers = questions?.options;
-
-  if (!questions) {
-    console.log('hhhh');
-  }
+  const answers = questions.options;
 
   return (
     <>
@@ -19,9 +15,6 @@ function Questions({ questions, answer, dispatch, points }) {
             dispatch={dispatch}
             points={points}
           />
-          <div>
-            <button className="btn timer">Timer</button>
-          </div>
         </>
       ) : (
         ''

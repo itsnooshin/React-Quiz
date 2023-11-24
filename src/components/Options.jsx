@@ -27,4 +27,3 @@ function Options({ questions, answers, dispatch, answer}) {
 
 export default Options;
 
-//  console.log(index, option, questions.correctOption)

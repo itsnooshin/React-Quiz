@@ -8,6 +8,7 @@ import Questions from './Questions.jsx';
 import NextQuestion from './NextQuestion.jsx';
 import Progress from './Progress.jsx';
 import FinishScreen from './FinishScreen.jsx';
+import Timer from './Timer.jsx';
 
 const initalState = {
   questions: [],
@@ -108,6 +109,8 @@ function App() {
               dispatch={dispatch}
               points={points}
             />
+
+            <Timer />
 
             <NextQuestion
               dispatch={dispatch}
