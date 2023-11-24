@@ -75,7 +75,7 @@ function App() {
   const calculate = questions.reduce((acc, cur) => acc + cur.points, 0);
 
   useEffect(() => {
-    fetch('https://localhost:9000/questions')
+    fetch('http://localhost:9000/questions')
       .then((res) => res.json())
       .then((data) => dispatch({ type: 'dataReceived', payLoad: data }))
       .catch((err) => dispatch({ type: 'dataFailed' }));
