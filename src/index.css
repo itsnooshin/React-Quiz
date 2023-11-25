@@ -259,3 +259,10 @@ progress {
 }
 
 
+@media(max-width:700px){
+  body{
+    background-color: red;
+    background-image: url('data/');
+  }
+}
+
