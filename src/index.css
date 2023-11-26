@@ -261,8 +261,27 @@ progress {
 
 @media(max-width:700px){
   body{
-    background-color: red;
-    background-image: url('data/');
+    
+    
+  }
+  html{
+    font-size: 62.5%;
+  }
+  .app-header{
+    width: 50rem;
+    max-width: 400px;
+  }
+  h1{
+    font-size: 4rem;
+  }
+  img{
+    width: 10rem;
+  }
+  .main{
+    width: 30rem;
+  }
+  .start{
+    
   }
 }
 
