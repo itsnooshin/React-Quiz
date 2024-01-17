@@ -1,19 +1,30 @@
-function NextQuestion({ dispatch, numQuestions, index, answer }) {
+import { useQuiz } from '../context/QuizContext';
+
+function NextQuestion() {
+  const { numQuestions, index, dispatch, answer } = useQuiz();
   if (answer === null) return null;
 
-  const isLastQuestion = index === numQuestions - 1;
-  const handleFinish = () => {
-    const actionType = isLastQuestion ? 'finished' : 'nextQuestion';
-    dispatch({ type: actionType });
-  };
-
-  return (
-    <div>
-      <button onClick={handleFinish} className="btn btn-ui">
-        {isLastQuestion ? 'Finish' : 'Next'}
+  if (index < numQuestions - 1) {
+    return (
+      <button
+        onClick={() => dispatch({ type: 'nextQuestion' })}
+        className="btn btn-ui"
+      >
+        Next
       </button>
-    </div>
-  );
+    );
+  }
+
+  if (index === numQuestions - 1) {
+    return (
+      <button
+        onClick={() => dispatch({ type: 'finish' })}
+        className="btn btn-ui"
+      >
+        Finished
+      </button>
+    );
+  }
 }
 
 export default NextQuestion;
